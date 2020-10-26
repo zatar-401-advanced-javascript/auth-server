@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>OAuth</title>
+</head>
+
+<body>
+  <main>
+    <a id="oauth" href="">Login</a>
+  </main>
+
+  <script>
+    const URL = 'https://github.com/login/oauth/authorize';
+
+    const options = {
+      client_id: 'ac752b784ed5b50df221',
+      scope: 'read:user',
+      state: 'zatar oauth',
+    };
+
+    const queryString = Object.keys(options)
+      .map((key) => {
+        return `${key}=${encodeURI(options[key])}`;
+      })
+      .join('&');
+
+    console.log('query', queryString);
+
+    const authURL = `${URL}?${queryString}`;
+
+    const linkTag = document.getElementById('oauth');
+    linkTag.setAttribute('href', authURL);
+  </script>
+</body>
+
+</html>

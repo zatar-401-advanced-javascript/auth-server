@@ -42,8 +42,8 @@ class Users {
     return token;
   }
   
-  read(_id) {
-    const query = _id ? { _id } : {};
+  read(element) {
+    const query = element ? { username:element } : {};
     return user.find(query);
   }
 }
