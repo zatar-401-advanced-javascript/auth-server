@@ -1,4 +1,4 @@
-# LAB - Class 11
+# LAB - Class 12
 
 ## Project: Auth Server
 
@@ -18,10 +18,12 @@ i.e.
 - `PORT` - Port Number
 - `MONGODB_URI` - URL to the running mongo instance/db
 - `SECRET` - Secret key for jwt
+- `CLIENT_ID` - id of provider
+- `CLIENT_SECRET` - Secret of provider
 
 #### How to initialize/run your application (where applicable)
 
-- `npm i dotenv express base-64 jsonwebtoken mongoose bcrypt cors cookie-parser`
+- `npm i dotenv express base-64 jsonwebtoken mongoose bcrypt cors cookie-parser superagent`
 - e.g. `npm start`
 
 #### How to use your library (where applicable)
