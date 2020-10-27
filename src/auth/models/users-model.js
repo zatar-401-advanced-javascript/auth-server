@@ -49,6 +49,7 @@ class Users {
       const tokenObject = jwt.verify(token, SECRET);
       console.log(tokenObject);
       const check = await this.read(tokenObject.username)
+      
       // console.log(check) 
       // if (db[tokenObject.username]) {`
       //   return Promise.resolve(tokenObject);
