@@ -38,12 +38,32 @@ class Users {
 
   generateToken(user) {
     // console.log(SECRET);
-    const token = jwt.sign({ username: user.username }, SECRET);
+    const token = jwt.sign({ username: user.username }, SECRET,{
+      expiresIn: '15min'
+    });
     return token;
+  }
+
+  async authenticateToken (token) {
+    try {
+      const tokenObject = jwt.verify(token, SECRET);
+      console.log(tokenObject);
+      const check = await this.read(tokenObject.username)
+      // console.log(check) 
+      // if (db[tokenObject.username]) {`
+      //   return Promise.resolve(tokenObject);
+      // } else {
+      //   return Promise.reject();
+      // }
+    } catch (e) {
+      return Promise.reject(e.message);
+    }
   }
   
   read(element) {
+    console.log(element);
     const query = element ? { username:element } : {};
+    console.log(query)
     return user.find(query);
   }
 }
