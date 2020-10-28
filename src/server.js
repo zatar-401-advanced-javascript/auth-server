@@ -1,6 +1,6 @@
 'use strict';
 const authRouter = require('./auth/router.js');
-const testRouter = require('./extra-routes.js')
+const testRouter = require('./extra-routes.js');
 
 // ---------------------------------------------------------------------------
 // Dependencies
@@ -18,7 +18,7 @@ app.use(express.static('./public'));
 // ---------------------------------------------------------------------------
 // Routes
 app.use('/', authRouter);
-app.use('/',testRouter)
+app.use('/',testRouter);
 
 // ---------------------------------------------------------------------------
 module.exports = {
