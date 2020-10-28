@@ -36,51 +36,41 @@ class Users {
     return Promise.reject();
   }
 
-  generateToken(user) {
+  generateToken(user,expires) {
     // console.log(SECRET);
-    const token = jwt.sign({ username: user.username }, SECRET,{
-      expiresIn: '15min'
-    });
+    let token;
+    if(expires){
+      token = jwt.sign({ username: user.username }, SECRET, {
+        expiresIn: `${expires}`,
+      });
+    }else{
+      token = jwt.sign({ username: user.username }, SECRET);
+    }
     return token;
   }
 
-  async authenticateToken (token) {
+  async authenticateToken(token) {
     try {
+      console.log('test');
       const tokenObject = jwt.verify(token, SECRET);
-      console.log(tokenObject);
-      const check = await this.read(tokenObject.username)
-      
-      // console.log(check) 
-      // if (db[tokenObject.username]) {`
-      //   return Promise.resolve(tokenObject);
-      // } else {
-      //   return Promise.reject();
-      // }
+      console.log('token obj', tokenObject);
+      const check = await this.read(tokenObject.username);
+      if (check) {
+        return Promise.resolve(tokenObject);
+      } else {
+        return Promise.reject();
+      }
     } catch (e) {
       return Promise.reject(e.message);
     }
   }
-  
+
   read(element) {
-    console.log(element);
-    const query = element ? { username:element } : {};
-    console.log(query)
+    // console.log(element);
+    const query = element ? { username: element } : {};
+    // console.log(query);
     return user.find(query);
   }
 }
 module.exports = new Users();
 
-
-
-// module.exports = mongoose.model('user', user);
-// read(_id) {
-// const query = _id ? { _id } : {};
-// return user.find(query);
-//   }
-// update(_id, record) {
-//   return user.findByIdAndUpdate(_id, record, { new: true });
-// }
-
-// delete (_id) {
-//   return user.findByIdAndDelete(_id);
-// }

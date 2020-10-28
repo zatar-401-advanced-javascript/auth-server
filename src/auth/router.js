@@ -19,7 +19,8 @@ router.get('/oauth',oauth,oauthHandler);
 
 function signupHandler(req, res) {
   users.save(req.body).then((user) => {
-    const token = users.generateToken(user);
+    // console.log(user);
+    const token = users.generateToken(user,'15min');
     res.status(201).json({ token, user });
   });
 }

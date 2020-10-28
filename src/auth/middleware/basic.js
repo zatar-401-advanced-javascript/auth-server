@@ -12,7 +12,7 @@ module.exports = (req, res, next) => {
       .authenticateBasic(user, pass)
       .then((validUser) => {
         // console.log('__ValidUser__', validUser);
-        req.token = users.generateToken(validUser);
+        req.token = users.generateToken(validUser[0]);
         req.user = validUser;
         next();
       })
