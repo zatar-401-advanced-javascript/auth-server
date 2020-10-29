@@ -51,9 +51,9 @@ describe('Auth Server', () => {
       const obj = {
         username:'test',
       }; 
-      const testExpire = users.generateToken(obj,'15min');
+      const testExpire = await users.generateToken(obj,'15min');
       const tokenObject = jwt.verify(testExpire, SECRET);
-      const testWithoutExpire = users.generateToken(obj);
+      const testWithoutExpire = await users.generateToken(obj);
       const tokenObject2 = jwt.verify(testWithoutExpire, SECRET);
       expect(tokenObject.exp).toBeDefined();
       expect(tokenObject2.exp).toBeUndefined();
@@ -62,7 +62,7 @@ describe('Auth Server', () => {
       const obj = {
         username:'test',
       }; 
-      const testExpired = users.generateToken(obj,'0sec');
+      const testExpired = await users.generateToken(obj,'0sec');
       req = {'headers':{'Authorization':`Bearer ${testExpired}`}};
       bearer(req,res,next);
       expect(next).toHaveBeenCalledWith('access denied');

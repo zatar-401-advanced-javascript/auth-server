@@ -10,9 +10,9 @@ module.exports = (req, res, next) => {
     // console.log('__BasicAuth__', user, pass);
     return users
       .authenticateBasic(user, pass)
-      .then((validUser) => {
+      .then(async (validUser) => {
         // console.log('__ValidUser__', validUser);
-        req.token = users.generateToken(validUser[0]);
+        req.token = await users.generateToken(validUser[0]);
         req.user = validUser;
         next();
       })
