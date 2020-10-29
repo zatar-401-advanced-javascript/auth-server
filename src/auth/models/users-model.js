@@ -7,6 +7,7 @@ const SECRET = process.env.SECRET || 'z1337z';
 const user = mongoose.model('user', mongoose.Schema({
   username: { type: String, required: true },
   password: { type: String, require: true },
+  role: { type: String,require: true, default: 'user' },
 }));
 
 const tokendb = mongoose.model('token', mongoose.Schema({
@@ -16,7 +17,14 @@ const tokendb = mongoose.model('token', mongoose.Schema({
 
 
 class Users {
+  
   constructor() {
+    this.roles = {
+      user: ['read'],
+      writer: ['read', 'create'],
+      editor: ['read', 'create', 'update'],
+      admin: ['read', 'create', 'update', 'delete'],
+    };
   }
   async save(record) {
     const check = await user.find({ username: record.username });
@@ -45,7 +53,7 @@ class Users {
   async generateToken(user,expires) {
     // console.log(SECRET);
     let token;
-    let singleUse = process.env.TOKEN_SINGLE_USE || 'true';
+    let singleUse = process.env.TOKEN_SINGLE_USE;
     // console.log(singleUse);
     if(expires){
       token = jwt.sign({ username: user.username, use:singleUse }, SECRET, {
@@ -68,7 +76,7 @@ class Users {
     try {
       const tokenObject = jwt.verify(token, SECRET);
       const check = await this.read(tokenObject.username);
-      // console.log('token obj', tokenObject);
+      console.log('token obj', tokenObject);
 
       // second secure layer
       if(tokenObject.use == 'true'){
@@ -90,8 +98,22 @@ class Users {
     } catch (e) {
       return Promise.reject(e.message);
     }
+
   }
 
+  async can(permission){
+    const userData = await user.find({ username: permission.user });
+    // console.log(userData[0]);
+    const role = userData[0].role;
+    const check = this.roles[role].includes(permission.capability);
+    console.log(check);
+    if(check){
+      return true;
+    }else{
+      return false;
+    }
+  }
+  
   read(element) {
     // console.log(element);
     const query = element ? { username: element } : {};

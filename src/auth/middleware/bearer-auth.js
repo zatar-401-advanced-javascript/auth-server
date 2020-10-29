@@ -2,7 +2,7 @@
 
 const users = require('../models/users-model');
 require('dotenv').config();
-let singleUse = process.env.TOKEN_SINGLE_USE || 'true';
+let singleUse = process.env.TOKEN_SINGLE_USE;
 
 
 module.exports = (req, res, next) => {
@@ -12,6 +12,7 @@ module.exports = (req, res, next) => {
     const token = req.headers.authorization.split(' ').pop();
     users.authenticateToken(token).then(async (user) =>{
       req.user = user;
+      console.log(req.user);
       if(singleUse == 'true'){
         const newToken = await users.generateToken(user,'15min');
         req.newtoken = newToken;
