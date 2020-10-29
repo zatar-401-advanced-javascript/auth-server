@@ -7,6 +7,7 @@ const MONGODB_URI = process.env.MONGODB_URI || 'mongodb+srv://heroku:heroku1337@
 mongoose.connect(MONGODB_URI, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
+  useFindAndModify: false,
 }).then(() =>{
   server.start(3000);
 }).catch((err) =>{

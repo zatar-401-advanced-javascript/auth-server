@@ -9,6 +9,12 @@ const user = mongoose.model('user', mongoose.Schema({
   password: { type: String, require: true },
 }));
 
+const tokendb = mongoose.model('token', mongoose.Schema({
+  token: { type: String, required: true },
+  use: { type: Number, require: true },
+}));
+
+
 class Users {
   constructor() {
   }
@@ -36,25 +42,46 @@ class Users {
     return Promise.reject();
   }
 
-  generateToken(user,expires) {
+  async generateToken(user,expires) {
     // console.log(SECRET);
     let token;
+    let singleUse = process.env.TOKEN_SINGLE_USE || 'true';
+    // console.log(singleUse);
     if(expires){
-      token = jwt.sign({ username: user.username }, SECRET, {
+      token = jwt.sign({ username: user.username, use:singleUse }, SECRET, {
         expiresIn: `${expires}`,
       });
     }else{
-      token = jwt.sign({ username: user.username }, SECRET);
+      token = jwt.sign({ username: user.username, use:singleUse }, SECRET);
     }
+
+    if(singleUse == 'true'){
+      const record = {'token':token,'use':0};
+      const tk = new tokendb(record);
+      await tk.save();
+    }
+
     return token;
   }
 
   async authenticateToken(token) {
     try {
-      console.log('test');
       const tokenObject = jwt.verify(token, SECRET);
-      console.log('token obj', tokenObject);
       const check = await this.read(tokenObject.username);
+      // console.log('token obj', tokenObject);
+
+      // second secure layer
+      if(tokenObject.use == 'true'){
+        const record = await tokendb.find({'token':token});
+        if(record[0].use>0){
+          return Promise.reject();
+        }
+        record[0].use += 1;
+        // console.log(record[0]);
+        await tokendb.findByIdAndUpdate(record[0]._id, record[0], { new: true });
+        
+      }
+
       if (check) {
         return Promise.resolve(tokenObject);
       } else {
