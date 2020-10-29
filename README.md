@@ -1,4 +1,4 @@
-# LAB - Class 13
+# LAB - Class 14
 
 ## Project: Auth Server
 
@@ -20,6 +20,7 @@ i.e.
 - `SECRET` - Secret key for jwt
 - `CLIENT_ID` - id of provider
 - `CLIENT_SECRET` - Secret of provider
+- `TOKEN_SINGLE_USE` - ture/false for single use of tokens
 
 #### How to initialize/run your application (where applicable)
 
